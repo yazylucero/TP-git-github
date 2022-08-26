@@ -1,5 +1,32 @@
 #define PIN_MOTOR_LEFT_DIR 1
 #define PIN_MOTOR_LEFT_PWM 2
+#define PIN_PULSADOR 3
+
+class Pulsador {
+  private:
+    int pin;
+    bool flanco = HIGH;
+    bool estado_anterior = !flanco;
+
+  public:
+    Pulsador(int p) {
+      pin = p;
+
+      pinMode(pin, INPUT);
+    }
+
+    void setFlanco(bool f) {
+      flanco = f;
+      estado_anterior = !flanco;
+    }
+
+    bool getIsPress() {
+      bool estado_actual = digitalRead(pin);
+      bool estado = (estado_anterior != estado_actual) && estado_actual == flanco;
+      estado_anterior = estado_actual;
+      return estado;
+    }
+};
 
 class Motor
 {
@@ -34,6 +61,7 @@ public:
 
 Motor *motor = new Motor(PIN_MOTOR_LEFT_DIR,PIN_MOTOR_LEFT_PWM);
 
+Pulsador *pulsador=new Pulsador(PIN_PULSADOR);
 
 void setup(){
 
